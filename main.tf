@@ -1,38 +1,42 @@
 terraform {
   required_providers {
     spotify = {
-      version = "~> 0.1.5"
+      version = "~> 0.2.6"
       source  = "conradludgate/spotify"
     }
   }
 }
 
-variable "spotify_api_key" {
-  type = string
-}
-
 provider "spotify" {
   api_key = var.spotify_api_key
+  username = "rominademiri"
+  token_id = "b600a147-a810-4f08-857e-00bd945f58d8"
+  auth_server = "https://oauth2.conrad.cafe"
 }
 
 resource "spotify_playlist" "playlist" {
-  name        = "Terraform Summer Playlist"
-  description = "This playlist was created by Terraform"
+  name        = "MartinaXPostMalone"
+  description = "Le canzoni prefe di Martina"
   public      = true
-
-  tracks = [
-    data.spotify_search_track.by_artist.tracks[0].id,
-    data.spotify_search_track.by_artist.tracks[1].id,
-    data.spotify_search_track.by_artist.tracks[2].id,
-  ]
+  tracks = flatten([
+    data.spotify_search_track.search.tracks[0].id,
+    data.spotify_search_track.search2.tracks[0].id,
+  ])
 }
 
-data "spotify_search_track" "by_artist" {
-  artists = ["Dolly Parton"]
-  #  album = "Jolene"
-  #  name  = "Early Morning Breeze"
+
+data "spotify_search_track" "search" {
+  name   = "Sunflower"
+  artist = "Post Malone"
+
+}
+data "spotify_search_track" "search2" {
+  name   = "Circles"
+  artist = "Post Malone"
+
 }
 
-output "tracks" {
-  value = data.spotify_search_track.by_artist.tracks
+
+output "test" {
+  value = data.spotify_search_track.search.tracks
 }
